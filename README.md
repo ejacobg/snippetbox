@@ -1,2 +1,3 @@
-# snippetbox
- Example project made following instructions from Alex Edwards's "Let's Go".
+# Snippetbox
+
+Example project made following instructions from Alex Edwards's "Let's Go".
