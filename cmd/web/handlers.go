@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ejacobg/snippetbox/internal/models"
-	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -21,25 +20,7 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.go.html",
-		"./ui/html/partials/nav.go.html",
-		"./ui/html/pages/home.go.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	data := templateData{Snippets: snippets}
-
-	err = ts.ExecuteTemplate(w, "base", &data)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+	app.render(w, http.StatusOK, "home.go.html", &templateData{Snippets: snippets})
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -59,25 +40,7 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.go.html",
-		"./ui/html/partials/nav.go.html",
-		"./ui/html/pages/view.go.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	data := templateData{Snippet: snippet}
-
-	err = ts.ExecuteTemplate(w, "base", &data)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
+	app.render(w, http.StatusOK, "view.go.html", &templateData{Snippet: snippet})
 }
 
 func (app *application) snippetCreate(w http.ResponseWriter, r *http.Request) {
