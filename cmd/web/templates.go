@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/ejacobg/snippetbox/internal/models"
+	"github.com/ejacobg/snippetbox/ui"
 	"html/template"
+	"io/fs"
 	"path/filepath"
 	"time"
 )
@@ -28,7 +30,7 @@ var functions = template.FuncMap{
 func newTemplateCache() (cache map[string]*template.Template, err error) {
 	cache = make(map[string]*template.Template)
 
-	pages, err := filepath.Glob("./ui/html/pages/*.go.html")
+	pages, err := fs.Glob(ui.Files, "html/pages/*.go.html")
 	if err != nil {
 		return nil, err
 	}
@@ -36,17 +38,13 @@ func newTemplateCache() (cache map[string]*template.Template, err error) {
 	for _, page := range pages {
 		name := filepath.Base(page)
 
-		ts, err := template.New(name).Funcs(functions).ParseFiles("./ui/html/base.go.html")
-		if err != nil {
-			return nil, err
+		patterns := []string{
+			"html/base.go.html",
+			"html/partials/*.go.html",
+			page,
 		}
 
-		ts, err = ts.ParseGlob("./ui/html/partials/*.go.html")
-		if err != nil {
-			return nil, err
-		}
-
-		ts, err = ts.ParseFiles(page)
+		ts, err := template.New(name).Funcs(functions).ParseFS(ui.Files, patterns...)
 		if err != nil {
 			return nil, err
 		}
