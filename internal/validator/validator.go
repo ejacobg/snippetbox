@@ -49,8 +49,8 @@ func MaxChars(value string, n int) bool {
 	return utf8.RuneCountInString(value) <= n
 }
 
-// PermittedInt returns true if the given int is present in a list of values.
-func PermittedInt(value int, permittedValues ...int) bool {
+// PermittedValue returns true if the given int is present in a list of values.
+func PermittedValue[T comparable](value T, permittedValues ...T) bool {
 	for i := range permittedValues {
 		if value == permittedValues[i] {
 			return true
